@@ -3,6 +3,7 @@ from datetime import datetime
 from itertools import dropwhile, takewhile
 import csv
 import os
+import time
 
 class GetInstagramProfile():
     def __init__(self) -> None:
@@ -77,22 +78,26 @@ class GetInstagramProfile():
 
 if __name__=="__main__":
     cls = GetInstagramProfile()
-    #cls.download_users_profile_picture("best_gadgets_2030")
-    #cls.download_users_posts_with_periods("best_gadgets_2030")
-    #cls.download_hastag_posts("gadgets")
+  
     cls.get_users_followers("theairasian")
-    #cls.get_users_followings("best_gadgets_2030")
-    #cls.get_post_comments("laydline")
-    #cls.get_post_info_csv("theairasian")
-    """ cls.L.login(input("input your username: "), input("input your password: ") ) 
+    
+    cls.L.login(input("input your username: "), input("input your password: ") ) 
     profile = instaloader.Profile.from_username(cls.L.context, "theairasian")
-    file = open("follower_names.txt","a+")
+    #file = open("follower_names.txt","a+")
     followers = profile.get_followers()
     print(followers.count)
+    count = 0
     for follower in followers:
         followers = str(follower.followers)
         following = str(follower.followees)
         username = follower.username
-        file.write(username + "|| followers: " + followers + " followings: " + following + "\n") """
+        #file.write(username + "|| followers: " + followers + " followings: " + following + "\n")
+        print(username + "|| followers: " + followers + " followings: " + following)
+
+
+        if(count == 30):
+            time.sleep(1200)
+            count = 0
+        count += 1
 
         
