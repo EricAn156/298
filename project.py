@@ -79,7 +79,7 @@ class GetInstagramProfile():
 if __name__=="__main__":
     cls = GetInstagramProfile()
   
-    cls.get_users_followers("theairasian")
+    #cls.get_users_followers("theairasian")
     
     cls.L.login(input("input your username: "), input("input your password: ") ) 
     profile = instaloader.Profile.from_username(cls.L.context, "theairasian")
