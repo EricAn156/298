@@ -40,3 +40,6 @@ To do:
 Separately: 
 - collect the above features from followers in our own accounts
 - create a classifier for automated accounts first (we can just run the bot classifier on our following or something)
+
+linear classifier 306 correct, out of 350 , accuracy: 0.8742857142857143
+MLP 303 correct out of 350 , accuracy: 0.8657142857142858

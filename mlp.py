@@ -1,7 +1,15 @@
+import numpy as np
 import torch
 # from torchsummary import summary
 from torch import nn
 from torch.utils.data import Dataset, DataLoader
+
+def normalize_data(x):
+    train_means = np.mean(x, axis=0)
+    train_stds = np.std(x, axis=0)
+    x -= train_means
+    x /= train_stds
+    return x
 
 class BotDataset(Dataset):
     def __init__(self, x, y):
@@ -23,10 +31,11 @@ class MLP(nn.Module):
         self.layers = nn.Sequential(
             nn.Linear(input_features, 32, dtype=torch.float64),
             nn.ReLU(),
-            nn.Linear(32, 2, dtype=torch.float64),
+            nn.Dropout(p=0.5),
+            # nn.Linear(32, 64, dtype=torch.float64),
             # nn.ReLU(),
-            # nn.Linear(32, 1, dtype=torch.float64),
-            # nn.Sigmoid()
+            # nn.Dropout(p=0.5),
+            nn.Linear(32, 2, dtype=torch.float64),
         )
     
     def forward(self, x):
@@ -38,7 +47,7 @@ def train_MLP(train_loader, test_loader, test_length, input_features):
 
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    num_epochs = 7500
+    num_epochs = 250
     loss_graph = []
     max_accuracy = 0.0
     for epoch in range(num_epochs):
@@ -55,11 +64,8 @@ def train_MLP(train_loader, test_loader, test_length, input_features):
             loss.backward()
             optimizer.step()
 
-            # for layer in model.parameters():
-            #     print(layer.grad)
-
             running_loss += loss.item()
-        if epoch % 100 == 0:
+        if epoch % 5 == 0:
             print(f'-----Epoch {epoch} loss: {running_loss}')
             test_accuracy = test_MLP('MLP', test_loader, model, test_length)
             max_accuracy = max(max_accuracy, test_accuracy)
@@ -78,9 +84,6 @@ def test_MLP(name, test_loader, model, total_samples):
             inputs, labels = data['features'], data['class']
             outputs = model(inputs)
             
-            # probabilities = torch.softmax(outputs, dim=0)
-            # preds = torch.zeros_like(probabilities)
-            # preds[probabilities > threshold] = 1
             preds = torch.argmax(outputs, dim=1)
             # print('shape', preds.shape, labels.shape)
             # print('correct', torch.sum(preds == labels))
@@ -89,6 +92,3 @@ def test_MLP(name, test_loader, model, total_samples):
         accuracy = correct / total_samples
         print(name, correct, 'correct out of', total_samples, ', accuracy:', accuracy)
     return accuracy
-
-
-# if __name__ == '__main__':

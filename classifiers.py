@@ -2,7 +2,7 @@ import json
 import numpy as np
 import mlp      # our code
 import torch
-from sklearn import datasets, linear_model, model_selection, metrics
+from sklearn import linear_model, model_selection, preprocessing
 
 from torch.utils.data import DataLoader
 
@@ -68,9 +68,13 @@ if __name__ == '__main__':
     x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y)
 
     # model outputs are a probability between 0 and 1, threshold for bot prediction: 0.5
-    threshold = 0.5
+    # threshold = 0.5
     # linear = train_linear_classifier(x_train, y_train)
     # test_model('linear classifier', linear, threshold, x_test, y_test)
+
+    # normalize data for neural net
+    x_train = mlp.normalize_data(x_train)
+    x_test = mlp.normalize_data(x_test)
 
     batch_size = 64
     train_dataset = mlp.BotDataset(x_train, y_train)
@@ -78,17 +82,18 @@ if __name__ == '__main__':
     test_dataset = mlp.BotDataset(x_test, y_test)
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-    # for training the model and saving parameters
+    # # for training the model and saving parameters
     model_path = 'mlp_model.pth'
     mlp_model, loss_graph = mlp.train_MLP(train_loader, test_loader, len(test_dataset), input_features=x_train.shape[1])
-    torch.save(mlp_model.state_dict(), model_path)
     loss_path = 'loss_graph.txt'
     with open(loss_path, 'w') as f:
         for item in loss_graph:
             f.write(f'{item[0]}, {item[1]}, {item[2]}\n')
 
-    # for uploading previously saved parameters
-    # mlp_model = mlp.MLP(input_features=x_train.shape[1])
-    # mlp_model.load_state_dict(torch.load(save_path))
-    # mlp.test_MLP('MLP', test_loader, mlp_model, threshold, len(test_dataset))
+    torch.save(mlp_model.state_dict(), model_path)
+
+    # # for uploading previously saved parameters
+    # # mlp_model = mlp.MLP(input_features=x_train.shape[1])
+    # # mlp_model.load_state_dict(torch.load(save_path))
+    # # mlp.test_MLP('MLP', test_loader, mlp_model, threshold, len(test_dataset))
 
