@@ -1,6 +1,10 @@
 import json
 import numpy as np
+import mlp      # our code
+import torch
 from sklearn import datasets, linear_model, model_selection, metrics
+
+from torch.utils.data import DataLoader
 
 def gen_data_array(filepath):
     with open(filepath) as f:
@@ -39,17 +43,22 @@ def gen_full_dataset():
     y = data[:, gt_index]
     return x, y
 
-def train_linear_classifier(x_train, x_test, y_train, y_test):
-    # model outputs are a probability between 0 and 1, threshold for bot prediction: 0.5
-    threshold = 0.5
-    model = linear_model.LinearRegression().fit(x_train, y_train)
 
+def train_linear_classifier(x_train, y_train):
+    model = linear_model.LinearRegression().fit(x_train, y_train)
+    return model
+
+# def train_MLP(x_train, y_train):
+#     model = 
+
+
+def test_model(name, model, threshold, x_test, y_test):
     y_test_pred = model.predict(x_test)
     mask = y_test_pred > threshold
     y_test_pred = np.zeros_like(y_test_pred)
     y_test_pred[mask] = 1
 
-    print('linear classifier:', np.count_nonzero(y_test_pred == y_test), 'correct, out of', len(y_test), ', accuracy:', np.count_nonzero(y_test_pred == y_test)/len(y_test))
+    print(name, np.count_nonzero(y_test_pred == y_test), 'correct, out of', len(y_test), ', accuracy:', np.count_nonzero(y_test_pred == y_test)/len(y_test))
     return model
 
 
@@ -58,7 +67,28 @@ if __name__ == '__main__':
     x, y = gen_full_dataset()
     x_train, x_test, y_train, y_test = model_selection.train_test_split(x, y)
 
-    linear = train_linear_classifier(x_train, x_test, y_train, y_test)
+    # model outputs are a probability between 0 and 1, threshold for bot prediction: 0.5
+    threshold = 0.5
+    # linear = train_linear_classifier(x_train, y_train)
+    # test_model('linear classifier', linear, threshold, x_test, y_test)
 
-    
+    batch_size = 64
+    train_dataset = mlp.BotDataset(x_train, y_train)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False)
+    test_dataset = mlp.BotDataset(x_test, y_test)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
+    # for training the model and saving parameters
+    model_path = 'mlp_model.pth'
+    mlp_model, loss_graph = mlp.train_MLP(train_loader, test_loader, len(test_dataset), input_features=x_train.shape[1])
+    torch.save(mlp_model.state_dict(), model_path)
+    loss_path = 'loss_graph.txt'
+    with open(loss_path, 'w') as f:
+        for item in loss_graph:
+            f.write(f'{item[0]}, {item[1]}, {item[2]}\n')
+
+    # for uploading previously saved parameters
+    # mlp_model = mlp.MLP(input_features=x_train.shape[1])
+    # mlp_model.load_state_dict(torch.load(save_path))
+    # mlp.test_MLP('MLP', test_loader, mlp_model, threshold, len(test_dataset))
 
