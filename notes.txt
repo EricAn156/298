@@ -28,11 +28,10 @@ Automated Account Detection Features
     user_biography_length - Number of characters present in account biography.
     username_length - Number of characters present in account username.
     username_digit_count - Number of digits present in account username.
-    media_comment_numbers - Total number of comments for a given media.
+    media_comment_numbers - Avg number of comments for a given media.
     media_comments_are_disabled - Whether given media is closed for comments, or not.
     media_has_location_info - Whether given media includes location, or not.
-    media_hashtag_numbers - Total number of hashtags, given media has.
-    media_upload_times - Media upload timastamps.
+    media_hashtag_numbers - Avg number of hashtags, given media has.
     automated_behaviour - True, if account is an automated account, False otherwise
 
 --------------------------------------------------------------------------------
