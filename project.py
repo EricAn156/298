@@ -116,9 +116,9 @@ if __name__=="__main__":
                 username_digits += 1
 
 
-        print(username + "|| mediacount: " + media_count + " followers: " + followers + " followings: " 
-              + following + " has highlight: " + str(has_highlight) + " has url: " + str(has_url) + " biography length: " 
-              + str(biography_length) + " username length: " + str(username_length) + " username digits: " + str(username_digits))
+        print(username + ", " + media_count + ", " + followers + ", " 
+              + following + ", " + str(has_highlight) + ", " + str(has_url) + ", " 
+              + str(biography_length) + ", " + str(username_length) + ", " + str(username_digits))
         time.sleep(10)
         #file.write(username + "|| followers: " + followers + " followings: " + following + "\n")
 
