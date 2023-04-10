@@ -25,14 +25,36 @@ class GetInstagramProfile():
             self.L.download_post(post, target='#'+hashtag)
 
     def get_users_followers(self,user_name):
-        '''Note: login required to get a profile's followers.'''
-        self.L.login(input("input your username: "), input("input your password: ") ) 
-        profile = instaloader.Profile.from_username(self.L.context, user_name)
-        file = open("follower_names.txt","a+")
-        for followee in profile.get_followers():
-            username = followee.username
-            file.write(username + "\n")
-            print(username)
+        cls.L.login(input("input your username: "), input("input your password: ") ) 
+        profile = instaloader.Profile.from_username(cls.L.context, "theairasian") #CHANGE FOR YOUR ACCOUNT
+        #file = open("follower_names.txt","a+")
+        followers = profile.get_followers()
+        
+        for follower in followers:
+            followers = str(follower.followers)
+            time.sleep(10)
+            following = str(follower.followees)
+            time.sleep(10)
+            username = follower.username
+            time.sleep(10)
+            media_count = str(follower.mediacount)
+            time.sleep(10)
+            has_highlight = follower.has_highlight_reels
+            time.sleep(10)
+            has_url = follower.external_url
+            time.sleep(10)
+            biography_length = len(follower.biography)
+            username_length = len(username)
+            username_digits = 0
+            for i in range(username_length):
+                if(username[i].isdigit()):
+                    username_digits += 1
+
+
+            print(username + ", " + media_count + ", " + followers + ", " 
+                + following + ", " + str(has_highlight) + ", " + str(has_url) + ", " 
+                + str(biography_length) + ", " + str(username_length) + ", " + str(username_digits))
+            time.sleep(10)
 
     def get_users_followings(self,user_name):
         '''Note: login required to get a profile's followings.'''
@@ -79,48 +101,10 @@ class GetInstagramProfile():
 if __name__=="__main__":
     cls = GetInstagramProfile()
   
-    #cls.get_users_followers("theairasian")
+    cls.get_users_followers("theairasian") #change your name
     
-    cls.L.login(input("input your username: "), input("input your password: ") ) 
-    profile = instaloader.Profile.from_username(cls.L.context, "theairasian") #CHANGE FOR YOUR ACCOUNT
-    #file = open("follower_names.txt","a+")
-    followers = profile.get_followers()
-    #print(followers.count)
-    count = 0
-
-    """ for follower in followers:
-        try:
-            follower_profile = instaloader.Profile.from_username(cls.L.context, follower.username)
-            print("%s has %d posts." % (follower.username, follower_profile.mediacount))
-        except:
-            print("Failed to retrieve data for %s." % follower.username) """
-
-    for follower in followers:
-        followers = str(follower.followers)
-        #time.sleep(10)
-        following = str(follower.followees)
-        #time.sleep(10)
-        username = follower.username
-        #time.sleep(10)
-        media_count = str(follower.mediacount)
-        #time.sleep(10)
-        has_highlight = follower.has_highlight_reels
-        #time.sleep(10)
-        has_url = follower.external_url
-        #time.sleep(10)
-        biography_length = len(follower.biography)
-        username_length = len(username)
-        username_digits = 0
-        for i in range(username_length):
-            if(username[i].isdigit()):
-                username_digits += 1
-
-
-        print(username + ", " + media_count + ", " + followers + ", " 
-              + following + ", " + str(has_highlight) + ", " + str(has_url) + ", " 
-              + str(biography_length) + ", " + str(username_length) + ", " + str(username_digits))
-        time.sleep(10)
-        #file.write(username + "|| followers: " + followers + " followings: " + following + "\n")
+    
 
 
         
+
