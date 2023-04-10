@@ -1,4 +1,4 @@
-username,user_media_count,user_follower_count,user_following_count,user_has_highlight_reels,user_has_url,user_biography_length,username_length,username_digit_count
+username,userMediaCount,userFollowerCount,userFollowingCount,userHasHighlighReels,userHasExternalUrl,userBiographyLength,usernameLength,usernameDigitCount
 oliver.wang1,1,612,671, True, None,11,12,1
 ivan_kalla,3,474,501, True, None,8,10,0
 meha_elango,0,199,307, True, None,0,11,0

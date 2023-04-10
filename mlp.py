@@ -92,3 +92,22 @@ def test_MLP(name, test_loader, model, total_samples):
         accuracy = correct / total_samples
         print(name, correct, 'correct out of', total_samples, ', accuracy:', accuracy)
     return accuracy
+
+
+def test_real_MLP(test_loader, model):
+    bot_usernames = []
+    with torch.no_grad():
+        for data in test_loader:
+            inputs, usernames = data['features'], data['class']
+            outputs = model(inputs)
+            preds = torch.argmax(outputs, dim=1)
+
+            # print(preds)
+            bot_mask = (preds == 1)
+            usernames = np.array(usernames)
+            # print(bot_mask, usernames)
+            # print('here', usernames.shape, usernames[bot_mask].shape, usernames[bot_mask])
+            bot_usernames.extend(usernames[bot_mask])
+            # print('bots_added', bot_mask.sum())
+
+    return bot_usernames
